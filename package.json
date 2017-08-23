@@ -1,0 +1,23 @@
+{
+  "name": "lex-helpers",
+  "version": "0.0.3",
+  "description": "Shared functions for modules such as predictAge and bigFive - you probably don't need this!",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phugh/lex-helpers.git"
+  },
+  "keywords": [
+    "lexicon",
+    "helpers",
+    "helper",
+    "positive",
+    "psychology"
+  ],
+  "author": "phughes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/phugh/lex-helpers/issues"
+  },
+  "homepage": "https://github.com/phugh/lex-helpers#readme"
+}
