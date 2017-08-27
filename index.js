@@ -84,12 +84,12 @@
     };
     if (wc && typeof wc !== 'number') wc = Number(wc);
     by = by || 'lex';
-    plcs = plcs || 9;
-    if (typeof plcs !== 'number') plcs = Number(plcs);
-    if (plcs > 20) {
-      plcs = 9;
-    } else if (plcs < 0) {
-      plcs = 0;
+    places = places || 9;
+    if (typeof places !== 'number') places = Number(places);
+    if (places > 20) {
+      places = 9;
+    } else if (places < 0) {
+      places = 0;
     }
     // prepare matches
     let matches = [];
