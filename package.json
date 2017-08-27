@@ -1,7 +1,7 @@
 {
   "name": "lex-helpers",
-  "version": "0.0.3",
-  "description": "Shared functions for modules such as predictAge and bigFive - you probably don't need this!",
+  "version": "0.0.4",
+  "description": "Shared functions for modules such as predictAge and bigFive.",
   "main": "index.js",
   "repository": {
     "type": "git",

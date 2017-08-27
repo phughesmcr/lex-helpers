@@ -10,7 +10,7 @@
    * @return {Array} output array
    */
   const arr2string = (arr) => {
-    if (!arr || 'object' !== typeof arr) {
+    if (!arr || typeof arr !== 'object') {
       throw new Error('arr2string needs an array!');
     }
     let i = 0;
@@ -30,6 +30,10 @@
    * @return {Array} array of indexes
    */
   const indexesOf = (arr, str) => {
+    if (!arr || !str) {
+      throw new Error('indexesOf needs input!');
+    }
+    if (typeof str !== 'string') str = str.toString();
     const idxs = [];
     let i = arr.length;
     while (i--) {
@@ -80,9 +84,13 @@
     };
     if (wc && typeof wc !== 'number') wc = Number(wc);
     by = by || 'lex';
-    places = places || 16;
-    if (places > 20) places = 20;
-    if (places < 0) places = 0;
+    plcs = plcs || 9;
+    if (typeof plcs !== 'number') plcs = Number(plcs);
+    if (plcs > 20) {
+      plcs = 9;
+    } else if (plcs < 0) {
+      plcs = 0;
+    }
     // prepare matches
     let matches = [];
     let word;
@@ -167,10 +175,13 @@
     if (wc && typeof wc !== 'number') wc = Number(wc);
     int = int || 0;
     if (typeof int !== 'number') int = Number(int);
-    plcs = plcs || 16;
-    if (plcs > 20) plcs = 20;
-    if (plcs < 0) plcs = 0;
+    plcs = plcs || 9;
     if (typeof plcs !== 'number') plcs = Number(plcs);
+    if (plcs > 20) {
+      plcs = 9;
+    } else if (plcs < 0) {
+      plcs = 0;
+    }
     // Calculate lexical value
     let lex = 0;
     let word;
@@ -179,6 +190,9 @@
       if (enc === 'freq' || enc === 'frequency') {
         // (word frequency / total wordcount) * weight
         lex += (Number(obj[word][1]) / wc) * Number(obj[word][2]);
+      } else if (enc === 'cent' || enc === 'percent') {
+        // percent of word count
+        lex += Number(obj[word][1]) / wc;
       } else {
         // weight
         lex += Number(obj[word][2]);
