@@ -238,13 +238,11 @@
         lex += obj[word][2];
       }
     }
-    // add the intercept
     if (enc !== 'cent' || enc !== 'percent') {
+      // add the intercept value
       lex += int;
-    } else {
-      lex = lex * 100;
     }
-    // return final lexical value
+    // return lex rounded to chosen decimal places
     return Math.round(lex * dec) / dec;
   };
 
