@@ -8,6 +8,12 @@ You probably don't need this module by itself!
 
 ### lexHelpers.calcLex
 
+### lexHelpers.doLex
+
+### lexHelpers.doMatches
+
+### lexHelpers.itemCount
+
 ### lexHelpers.getMatches
 
 ### lexhelpers.prepareMatches

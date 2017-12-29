@@ -1,6 +1,6 @@
 {
   "name": "lex-helpers",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Shared functions for modules such as predictAge and bigFive.",
   "main": "index.js",
   "repository": {
@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/phugh/lex-helpers/issues"
   },
-  "homepage": "https://github.com/phugh/lex-helpers#readme"
+  "homepage": "https://github.com/phugh/lex-helpers#readme",
+  "dependencies": {
+    "async": "^2.6.0"
+  }
 }
