@@ -2,7 +2,7 @@
 
 Shared functions for my other modules.
 
-You probably don't need this module by itself!
+You probably don't need this module.
 
 ## Functions
 
@@ -24,7 +24,7 @@ You probably don't need this module by itself!
 
 ### lexhelpers.arr2string
 
-## Licence
-(C) 2017 [P. Hughes](https://www.phugh.es)
+## License
+(C) 2017-18 [P. Hughes](https://www.phugh.es). All rights reserved.
 
 Released under the [MIT licence](http://spdx.org/licenses/MIT.html).

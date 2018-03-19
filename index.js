@@ -1,16 +1,14 @@
 (function() {
   'use strict';
-  const global = this;
-  const previous = global.lexHelpers;
   const async = require('async');
 
   /**
    * Combines multidimensional array elements into strings
    * @function arr2string
-   * @param {Array} arr   input array
-   * @return {Array}      output array
+   * @param  {array} arr  input array
+   * @return {array}      output array
    */
-  const arr2string = (arr) => {
+  function arr2string(arr) {
     if (!arr || typeof arr !== 'object') {
       throw new Error('arr2string needs an array!');
     }
@@ -20,18 +18,18 @@
       result.push(arr[i].join(' '));
     }
     return result;
-  };
+  }
 
   /**
    * @function doLex
-   * @param  {Object} matches   lexical matches object
-   * @param  {Object} ints      intercept values
+   * @param  {object} matches   lexical matches object
+   * @param  {object} ints      intercept values
    * @param  {number} dec       decimal places limit
    * @param  {string} enc       type of lexical encoding
    * @param  {number} wc        total word count
-   * @return {Object}           lexical values object
+   * @return {object}           lexical values object
    */
-  const doLex = (matches, ints, dec, enc, wc) => {
+  function doLex(matches, ints, dec, enc, wc) {
     // error handling
     if (!matches || !ints) {
       throw new Error('doLex needs both matches and ints objects!');
@@ -52,7 +50,7 @@
       enc = enc.toString();
     }
     if (!wc) {
-      if (enc === 'freq' || enc === 'frequency') {
+      if (enc.match(/freq/gi)) {
         throw new Error('doLex: frequency encoding needs word count!');
       } else {
         wc = 0;
@@ -66,21 +64,21 @@
       values[cat] = calcLex(matches[cat], ints[cat], dec, enc, wc);
       callback();
     }, function(err) {
-      if (err) console.error(err);
+      if (err) throw new Error(err);
     });
     return values;
-  };
+  }
 
   /**
    * @function doMatches
-   * @param  {Object} matches   lexical matches object
+   * @param  {object} matches   lexical matches object
    * @param  {string} by        how to sort arrays
    * @param  {number} wc        total word count
    * @param  {number} dec       decimal places limit
    * @param  {string} enc       type of lexical encoding
-   * @return {Object}           sorted matches object
+   * @return {object}           sorted matches object
    */
-  const doMatches = (matches, by, wc, dec, enc) => {
+  function doMatches(matches, by, wc, dec, enc) {
     // error handling
     if (!matches || typeof matches !== 'object') {
       throw new Error('doMatches needs an input object!');
@@ -91,7 +89,7 @@
       enc = enc.toString();
     }
     if (!wc) {
-      if (enc === 'freq' || enc === 'frequency') {
+      if (enc.match(/freq/gi)) {
         throw new Error('doMatches: frequency encoding needs word count!');
       } else {
         wc = 0;
@@ -117,19 +115,19 @@
           enc);
       callback();
     }, function(err) {
-      if (err) console.error(err);
+      if (err) throw new Error(err);
     });
     return match;
-  };
+  }
 
   /**
    * Get the indexes of duplicate elements in an array
    * @function indexesOf
-   * @param {Array} arr   input array
-   * @param {string} str  string to test against
-   * @return {Array}      array of indexes
+   * @param  {array}  arr   input array
+   * @param  {string} str   string to test against
+   * @return {array}        array of indexes
    */
-  const indexesOf = (arr, str) => {
+  function indexesOf(arr, str) {
     if (!arr || !str) {
       throw new Error('indexesOf needs input!');
     }
@@ -142,15 +140,15 @@
       }
     }
     return idxs;
-  };
+  }
 
   /**
    * Count items in array and return object as {item: count, item: count...}
    * @function itemCount
-   * @param  {Array} arr  array of tokens
-   * @return {Object}
+   * @param  {array}  arr  array of tokens
+   * @return {object}
    */
-  const itemCount = (arr) => {
+  function itemCount(arr) {
     if (!arr) {
       throw new Error('itemCounts needs input!');
     }
@@ -165,39 +163,38 @@
       }
     }
     return output;
-  };
+  }
 
   /**
    * Sort and return an array by column
    * @function sortArrBy
-   * @param {Array} arr   input array
-   * @param {string} by   what to sort by
-   * @return {Array}
+   * @param   {array}   arr   input array
+   * @param   {string}  by    what to sort by
+   * @return  {array}
    */
-  const sortArrBy = (arr, by) => {
+  function sortArrBy(arr, by) {
     let x = 3; // default to sort by lexical value
-    if (by === 'weight') {
+    if (by.match(/weight/gi)) {
       x = 2;
-    } else if (by === 'freq' || by === 'frequency') {
+    } else if (by.match(/freq/gi)) {
       x = 1;
     }
-    const sorter = (a, b) => {
-      return a[x] - b[x];
-    };
-    return arr.sort(sorter);
-  };
+    return arr.sort((a, b) => 
+      a[x] - b[x]
+    );
+  }
 
   /**
    * Prepare an object to be sorted by sortArrBy
    * @function prepareMatches
-   * @param {Object} obj    input object
-   * @param {string} by     string
-   * @param {number} wc     word count
-   * @param {number} dec    decimal places
-   * @param {string} enc    encoding type
-   * @return {Array}        sorted array
+   * @param   {object} obj    input object
+   * @param   {string} by     string
+   * @param   {number} wc     word count
+   * @param   {number} dec    decimal places
+   * @param   {string} enc    encoding type
+   * @return  {array}        sorted array
    */
-  const prepareMatches = (obj, by, wc, dec, enc) => {
+  function prepareMatches(obj, by, wc, dec, enc) {
     // error handling
     if (!obj || typeof obj !== 'object') {
       throw new Error('prepareMatches needs an input object!');
@@ -208,7 +205,7 @@
       enc = enc.toString();
     }
     if (!wc) {
-      if (enc === 'freq' || enc === 'frequency') {
+      if (enc.match(/freq/gi)) {
         throw new Error('frequency encoding needs word count!');
       } else {
         wc = 0;
@@ -235,13 +232,13 @@
       const freq = obj[word][1];
       const weight = Math.round(obj[word][2] * dec) / dec;
       let lex = weight;
-      if (enc === 'freq' || enc === 'frequency') {
+      if (enc.match(/freq/gi)) {
         lex = Math.round(((freq / wc) * obj[word][2]) * dec) / dec;
       }
       matches.push([obj[word][0], freq, weight, lex]);
       m += freq;
     }, function(err) {
-      if (err) console.error(err);
+      if (err) throw new Error(err);
     });
     let x = sortArrBy(matches, by);
     return {
@@ -253,18 +250,18 @@
         percent_matches: parseFloat(((m / wc) * 100).toFixed(2)),
       },
     };
-  };
+  }
 
   /**
    * Match token object against a lexicon object
    * @function getMatches
-   * @param {Object} tkns token object
-   * @param {Object} lex  lexicon object
-   * @param {number} min  minimum weight threshold
-   * @param {number} max  maximum weight threshold
-   * @return {Object}     object of matches
+   * @param   {object} tkns token object
+   * @param   {object} lex  lexicon object
+   * @param   {number} min  minimum weight threshold
+   * @param   {number} max  maximum weight threshold
+   * @return  {object}     object of matches
    */
-  const getMatches = (tkns, lex, min, max) => {
+  function getMatches(tkns, lex, min, max) {
     // error handling
     if (!tkns || !lex || typeof tkns !== 'object' || typeof lex !== 'object') {
       throw new Error('getMatches: invalid or absent input!');
@@ -300,22 +297,22 @@
       matches[category] = match;
       callback();
     }, function(err) {
-      if (err) console.error(err);
+      if (err) throw new Error(err);
     });
     return matches;
-  };
+  }
 
   /**
   * Calculate the total lexical value of matches
   * @function calcLex
-  * @param {Object} obj   matches object
+  * @param {object} obj   matches object
   * @param {number} int   intercept value
   * @param {number} dec   decimal places
   * @param {string} enc   type of encoding to use
   * @param {number} wc    wordcount
   * @return {number}      lexical value
   */
-  const calcLex = (obj, int, dec, enc, wc) => {
+  function calcLex(obj, int, dec, enc, wc) {
     // error handling
     if (!obj) {
       throw new Error('calcLex needs input object!');
@@ -326,7 +323,7 @@
       enc = enc.toString();
     }
     if (!wc) {
-      if (enc === 'freq' || enc === 'frequency') {
+      if (enc.match(/freq/gi)) {
         throw new Error('frequency encoding needs word count!');
       } else {
         wc = 0;
@@ -354,10 +351,10 @@
     dec = Math.pow(10, dec);
     for (let word in obj) {
       if (!obj.hasOwnProperty(word)) continue;
-      if (enc === 'freq' || enc === 'frequency') {
+      if (enc.match(/freq/gi)) {
         // (word frequency / total wordcount) * weight
         lex += (obj[word][1] / wc) * obj[word][2];
-      } else if (enc === 'cent' || enc === 'percent') {
+      } else if (enc.match(/cent/gi)) {
         // percent of word count
         lex += obj[word][1] / wc;
       } else {
@@ -365,13 +362,13 @@
         lex += obj[word][2];
       }
     }
-    if (enc !== 'cent' || enc !== 'percent') {
+    if (!enc.match(/cent/gi)) {
       // add the intercept value
       lex += int;
     }
     // return lex rounded to chosen decimal places
     return Math.round(lex * dec) / dec;
-  };
+  }
 
   const lexHelpers = {
     arr2string: arr2string,
@@ -385,11 +382,6 @@
     sortArrBy: sortArrBy,
   };
 
-  lexHelpers.noConflict = function() {
-    global.lexHelpers = previous;
-    return lexHelpers;
-  };
-
   if (typeof exports !== 'undefined') {
     if (typeof module !== 'undefined' && module.exports) {
       exports = module.exports = lexHelpers;
@@ -398,4 +390,4 @@
   } else {
     global.lexHelpers = lexHelpers;
   }
-}).call(this);
+})();
