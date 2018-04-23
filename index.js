@@ -10,12 +10,13 @@
    */
   function arr2string(arr) {
     if (!arr || typeof arr !== 'object') {
-      throw new Error('arr2string needs an array!');
+      throw new Error('arr2string: no array input!');
     }
     const len = arr.length;
     const result = [];
-    for (let i = 0; i < len; i++) {
-      result.push(arr[i].join(' '));
+    let i;
+    for (i = 0; i < len; i++) {
+      result.push(arr[i].join(' ').replace(/\s([.,\/#!$%\^&\*;:{}=\-_`~()])\s*/gmi, '$1 '));
     }
     return result;
   }
@@ -29,15 +30,10 @@
    * @param  {number} wc        total word count
    * @return {object}           lexical values object
    */
-  function doLex(matches, ints, dec, enc, wc) {
+  function doLex(matches, ints, dec = 9, enc, wc) {
     // error handling
     if (!matches || !ints) {
       throw new Error('doLex needs both matches and ints objects!');
-    }
-    if (!dec) {
-      dec = 9;
-    } else if (typeof dec !== 'number') {
-      dec = ~~dec;
     }
     if (dec > 20) {
       dec = 14;
@@ -60,7 +56,8 @@
     }
     // meat
     const values = {};
-    async.each(Object.keys(matches), function(cat, callback) {
+    const keys = Object.keys(matches);
+    async.each(keys, function(cat, callback) {
       values[cat] = calcLex(matches[cat], ints[cat], dec, enc, wc);
       callback();
     }, function(err) {
@@ -78,7 +75,7 @@
    * @param  {string} enc       type of lexical encoding
    * @return {object}           sorted matches object
    */
-  function doMatches(matches, by, wc, dec, enc) {
+  function doMatches(matches, by = 'lex', wc, dec = 9, enc) {
     // error handling
     if (!matches || typeof matches !== 'object') {
       throw new Error('doMatches needs an input object!');
@@ -97,22 +94,16 @@
     } else if (typeof wc !== 'number') {
       wc = ~~wc;
     }
-    if (!dec) {
-      dec = 9;
-    } else if (typeof dec !== 'number') {
-      dec = ~~dec;
-    }
     if (dec > 20) {
       dec = 14;
     } else if (dec < 0) {
       dec = 0;
     }
-    by = by || 'lex';
     // meat
     const match = {};
-    async.each(Object.keys(matches), function(cat, callback) {
-      match[cat] = prepareMatches(matches[cat], by, wc, dec,
-          enc);
+    const keys = Object.keys(matches);
+    async.each(keys, function(cat, callback) {
+      match[cat] = prepareMatches(matches[cat], by, wc, dec, enc);
       callback();
     }, function(err) {
       if (err) throw new Error(err);
@@ -130,13 +121,46 @@
   function indexesOf(arr, str) {
     if (!arr || !str) {
       throw new Error('indexesOf needs input!');
-    }
-    if (typeof str !== 'string') str = str.toString();
+    } else if (typeof str !== 'string') str = str.toString();
     const idxs = [];
-    let i = arr.length;
-    while (i--) {
+    const len = arr.length;
+    let i;
+
+    // (http://jsperf.com/array-unshift-vs-prepend/8)
+    const unshift = (arr, item) => {
+      let len = arr.length;
+      while (len) {
+        arr[len] = arr[len-1];
+        len--;
+      }
+      arr[0] = item;
+    };
+
+    for (i = 0; i < len; i++) {
       if (arr[i] === str) {
-        idxs.unshift(i);
+        unshift(idxs, i);
+      }
+    }
+    return idxs;
+  }
+
+   /**
+   * Get the number of matched elements in an array
+   * @function numberOf
+   * @param  {array}  arr   input array
+   * @param  {string} str   string to test against
+   * @return {array}        array of indexes
+   */
+  function numberOf(arr, str) {
+    if (!arr || !str) {
+      throw new Error('numberOf needs input!');
+    } else if (typeof str !== 'string') str = str.toString();
+    const len = arr.length;
+    let idxs = 0;
+    let i;
+    for (i = 0; i < len; i++) {
+      if (arr[i] === str) {
+        idxs += 1;
       }
     }
     return idxs;
@@ -154,11 +178,12 @@
     }
     const output = {};
     const unique = [];
-    let i = arr.length;
-    while (i--) {
+    const len = arr.length;
+    let i;
+    for (i = 0; i < len; i++) {
       let word = arr[i];
       if (unique.indexOf(word) === -1) {
-        output[word] = indexesOf(arr, word).length;
+        output[word] = numberOf(arr, word);
         unique.push(word);
       }
     }
@@ -173,13 +198,16 @@
    * @return  {array}
    */
   function sortArrBy(arr, by) {
+    if (!arr || typeof arr !== 'object') {
+      throw new Error('sortArrBy needs an array!');
+    }
     let x = 3; // default to sort by lexical value
     if (by.match(/weight/gi)) {
       x = 2;
     } else if (by.match(/freq/gi)) {
       x = 1;
     }
-    return arr.sort((a, b) => 
+    return arr.sort((a, b) =>
       a[x] - b[x]
     );
   }
@@ -194,7 +222,7 @@
    * @param   {string} enc    encoding type
    * @return  {array}        sorted array
    */
-  function prepareMatches(obj, by, wc, dec, enc) {
+  function prepareMatches(obj, by = 'lex', wc, dec = 9, enc) {
     // error handling
     if (!obj || typeof obj !== 'object') {
       throw new Error('prepareMatches needs an input object!');
@@ -213,12 +241,6 @@
     } else if (typeof wc !== 'number') {
       wc = ~~wc;
     }
-    by = by || 'lex';
-    if (!dec) {
-      dec = 9;
-    } else if (typeof dec !== 'number') {
-      dec = ~~dec;
-    }
     if (dec > 20) {
       dec = 14;
     } else if (dec < 0) {
@@ -228,11 +250,13 @@
     let matches = [];
     let m = 0;
     dec = Math.pow(10, dec);
-    async.each(Object.keys(obj), function(word, callback) {
+    let keys = Object.keys(obj);
+    let fEnc = (enc.match(/freq/gi)) ? true : false;
+    async.each(keys, function(word, callback) {
       const freq = obj[word][1];
       const weight = Math.round(obj[word][2] * dec) / dec;
       let lex = weight;
-      if (enc.match(/freq/gi)) {
+      if (fEnc) {
         lex = Math.round(((freq / wc) * obj[word][2]) * dec) / dec;
       }
       matches.push([obj[word][0], freq, weight, lex]);
@@ -261,31 +285,23 @@
    * @param   {number} max  maximum weight threshold
    * @return  {object}     object of matches
    */
-  function getMatches(tkns, lex, min, max) {
+  function getMatches(tkns, lex, min = Number.NEGATIVE_INFINITY, max = Number.POSITIVE_INFINITY) {
     // error handling
     if (!tkns || !lex || typeof tkns !== 'object' || typeof lex !== 'object') {
       throw new Error('getMatches: invalid or absent input!');
     }
-    if (!max) {
-      max = Number.POSITIVE_INFINITY;
-    } else if (typeof max !== 'number') {
-      max = parseFloat(max);
-    }
-    if (!min) {
-      min = Number.NEGATIVE_INFINITY;
-    } else if (typeof min !== 'number') {
-      min = parseFloat(min);
-    }
     const matches = {};
     const tokens = Object.keys(tkns);
+    const lexKeys = Object.keys(lex);
+    const len = tokens.length;
     // async through each category in lexicon
-    async.each(Object.keys(lex), function(category, callback) {
+    async.each(lexKeys, function(category, callback) {
       const match = [];
       const data = lex[category];
       const keys = Object.keys(data);
-      let i = tokens.length;
-      while (i--) {
-        let word = tokens[i];
+      let i;
+      for (i = 0; i < len; i++) {
+        const word = tokens[i];
         if (keys.indexOf(word) > -1) {
           const weight = data[word];
           if (weight < max && weight > min) {
@@ -312,7 +328,7 @@
   * @param {number} wc    wordcount
   * @return {number}      lexical value
   */
-  function calcLex(obj, int, dec, enc, wc) {
+  function calcLex(obj, int = 0, dec = 9, enc, wc) {
     // error handling
     if (!obj) {
       throw new Error('calcLex needs input object!');
@@ -324,23 +340,14 @@
     }
     if (!wc) {
       if (enc.match(/freq/gi)) {
-        throw new Error('frequency encoding needs word count!');
+        throw new Error('calcLex: frequency encoding needs a word count!');
       } else {
         wc = 0;
       }
     } else if (typeof wc !== 'number') {
       wc = ~~wc;
     }
-    if (!int) {
-      int = 0;
-    } else if (typeof int !== 'number') {
-      int = parseFloat(int);
-    }
-    if (!dec) {
-      dec = 9;
-    } else if (typeof dec !== 'number') {
-      dec = ~~dec;
-    }
+
     if (dec > 20) {
       dec = 14;
     } else if (dec < 0) {
@@ -349,20 +356,29 @@
     // Calculate lexical value
     let lex = 0;
     dec = Math.pow(10, dec);
-    for (let word in obj) {
-      if (!obj.hasOwnProperty(word)) continue;
-      if (enc.match(/freq/gi)) {
-        // (word frequency / total wordcount) * weight
-        lex += (obj[word][1] / wc) * obj[word][2];
-      } else if (enc.match(/cent/gi)) {
-        // percent of word count
-        lex += obj[word][1] / wc;
-      } else {
-        // weight
-        lex += obj[word][2];
+    if (enc.match(/freq/gi)) {
+      for (let word in obj) {
+        if (obj.hasOwnProperty(word)) {
+          // (word frequency / total wordcount) * weight
+          lex += (obj[word][1] / wc) * obj[word][2];
+        }
       }
-    }
-    if (!enc.match(/cent/gi)) {
+      // add the intercept value
+      lex += int;
+    } else if (enc.match(/cent/gi)) {
+      for (let word in obj) {
+        if (obj.hasOwnProperty(word)) {
+          // percent of word count
+          lex += obj[word][1] / wc;
+        }
+      }
+    } else {
+      for (let word in obj) {
+        if (obj.hasOwnProperty(word)) {
+          // weight
+          lex += obj[word][2];
+        }
+      }
       // add the intercept value
       lex += int;
     }
@@ -377,6 +393,7 @@
     doMatches: doMatches,
     getMatches: getMatches,
     indexesOf: indexesOf,
+    numberOf: numberOf,
     itemCount: itemCount,
     prepareMatches: prepareMatches,
     sortArrBy: sortArrBy,

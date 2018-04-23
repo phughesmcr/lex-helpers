@@ -22,6 +22,8 @@ You probably don't need this module.
 
 ### lexhelpers.indexesOf
 
+### lexhelpers.numberOf
+
 ### lexhelpers.arr2string
 
 ## License

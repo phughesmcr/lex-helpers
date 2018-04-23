@@ -1,20 +1,13 @@
 {
   "name": "lex-helpers",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Shared functions for modules such as predictAge and bigFive.",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/phugh/lex-helpers.git"
   },
-  "keywords": [
-    "lexicon",
-    "helpers",
-    "helper",
-    "positive",
-    "psychology"
-  ],
-  "author": "phughes",
+  "author": "P. Hughes <peter@phugh.es> (http://www.phugh.es)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/phugh/lex-helpers/issues"
