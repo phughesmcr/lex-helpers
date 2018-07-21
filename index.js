@@ -16,7 +16,7 @@
     const result = [];
     let i;
     for (i = 0; i < len; i++) {
-      result.push(arr[i].join(' ').replace(/\s([.,\/#!$%\^&\*;:{}=\-_`~()])\s*/gmi, '$1 '));
+      result.push(arr[i].join(' ').replace(/\s([.,\/#!$%\^&\*;:{}=\-_`~()])\s*/gmi, '$1 ')); // eslint-disable-line
     }
     return result;
   }
@@ -285,7 +285,7 @@
    * @param   {number} max  maximum weight threshold
    * @return  {object}     object of matches
    */
-  function getMatches(tkns, lex, min = Number.NEGATIVE_INFINITY, max = Number.POSITIVE_INFINITY) {
+  function getMatches(tkns, lex, min = Number.NEGATIVE_INFINITY, max = Number.POSITIVE_INFINITY) { // eslint-disable-line
     // error handling
     if (!tkns || !lex || typeof tkns !== 'object' || typeof lex !== 'object') {
       throw new Error('getMatches: invalid or absent input!');
