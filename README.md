@@ -6,25 +6,21 @@ You probably don't need this module.
 
 ## Functions
 
+### lexhelpers.arr2string
+
 ### lexHelpers.calcLex
+
+### lexhelpers.calcMatches
 
 ### lexHelpers.doLex
 
 ### lexHelpers.doMatches
 
-### lexHelpers.itemCount
-
 ### lexHelpers.getMatches
 
-### lexhelpers.prepareMatches
+### lexHelpers.itemCount
 
 ### lexhelpers.sortArrBy
-
-### lexhelpers.indexesOf
-
-### lexhelpers.numberOf
-
-### lexhelpers.arr2string
 
 ## License
 (C) 2017-18 [P. Hughes](https://www.phugh.es). All rights reserved.
