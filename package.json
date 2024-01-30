@@ -1,7 +1,7 @@
 {
   "name": "lex-helpers",
   "description": "Functions for calculating Open Vocabulary lexical statistics.",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "main": "index.js",
   "module": "index.js",
   "type": "module",
