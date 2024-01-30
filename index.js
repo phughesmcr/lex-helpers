@@ -115,14 +115,35 @@ export const getLexiconValue = (weightedFreqs, intercept = 0) => {
 };
 
 /**
- * A simple synchronous pipeline for calculating lexicon values.
+ * A simple synchronous pipeline for calculating lexicon values using binary (0/1) frequencies.
  * Unlikely to be suitable for large datasets.
  * @param {Record<string, number>} lexicon An object containing lexicon values for tokens.
  * @param {number} [intercept=0] An optional intercept value to add to the total usage value. Defaults to 0.
  * @param {number} [fractionDigits=10] `sum.toFixed(fractionDigits)`. Defaults to 10.
  * @returns {(tokens: string[], fractionDigitsOverride?: number): number}
  */
-export const lexPipeline = (lexicon, intercept = 0, fractionDigits = 10) => {
+export const lexBinaryPipeline = (lexicon, intercept = 0, fractionDigits = 10) => {
+  return (
+    tokens,
+    interceptOverride = intercept,
+    fractionDigitsOverride = fractionDigits,
+  ) => {
+    const freqs = new Map([...new Set(tokens)].map((token) => [token, 1]));
+    const weightedFreqs = getWeightedRelativeFrequencies(lexicon, freqs);
+    const value = getLexiconValue(weightedFreqs, interceptOverride);
+    return correctFloat(value, fractionDigitsOverride);
+  };
+};
+
+/**
+ * A simple synchronous pipeline for calculating lexicon values using frequency counts
+ * Unlikely to be suitable for large datasets.
+ * @param {Record<string, number>} lexicon An object containing lexicon values for tokens.
+ * @param {number} [intercept=0] An optional intercept value to add to the total usage value. Defaults to 0.
+ * @param {number} [fractionDigits=10] `sum.toFixed(fractionDigits)`. Defaults to 10.
+ * @returns {(tokens: string[], fractionDigitsOverride?: number): number}
+ */
+export const lexFrequencyPipeline = (lexicon, intercept = 0, fractionDigits = 10) => {
   return (
     tokens,
     interceptOverride = intercept,
@@ -133,13 +154,14 @@ export const lexPipeline = (lexicon, intercept = 0, fractionDigits = 10) => {
     const value = getLexiconValue(weightedFreqs, interceptOverride);
     return correctFloat(value, fractionDigitsOverride);
   };
-};
+}
 
 export default {
   correctFloat,
   getFrequencies,
   getWeightedRelativeFrequencies,
   getLexiconValue,
-  lexPipeline,
+  lexBinaryPipeline,
+  lexFrequencyPipeline,
   sumValues,
 };

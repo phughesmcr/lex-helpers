@@ -138,7 +138,7 @@ console.log("manual = success");
 
 // now let's try using the pipeline
 
-const pipeline = lexHelpers.lexPipeline(lex, intercept);
+const pipeline = lexHelpers.lexFrequencyPipeline(lex, intercept);
 
 const pipeDoc1 = pipeline(tokens.doc1);
 const pipeDoc2 = pipeline(tokens.doc2);

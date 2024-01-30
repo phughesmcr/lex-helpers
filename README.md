@@ -4,7 +4,7 @@ Functions for calculating Open Vocabulary lexical statistics.
 
 ## Quick Start
 
-See [lexPipeline API documentation below](#lexpipeline). Also see
+See [lexFrequencyPipeline API documentation below](#lexFrequencyPipeline). Also see
 `index.test.js` for a recreation of the
 [WWBP example]([https://www](https://wwbp.org/lexica.html#refinement)).
 
@@ -12,14 +12,14 @@ See [lexPipeline API documentation below](#lexpipeline). Also see
 // import your lexicon data as a JSON object (i.e., Record<string, number>)
 import lexicon from "./lexicon.json" with { type: "json" }; // example
 
-// import the lexPipeline function from this module
-import { lexPipeline } from "lex-helpers";
+// import the lexFrequencyPipeline function from this module
+import { lexFrequencyPipeline } from "lex-helpers";
 
 // define your intercept
 const intercept = 10.523; // example
 
 // create your custom pipeline
-const pipeline = lexPipeline(lexicon, intercept);
+const pipeline = lexFrequencyPipeline(lexicon, intercept);
 
 // get some tokens
 const doc1Tokens = ["the", "cat", "sat", "on", "the", "mat"]; // example
@@ -91,7 +91,7 @@ const intercept = 10.523;
 const lexiconValue = getLexiconValue(weightedRelativeFrequencies, intercept); // {number}
 ```
 
-### lexPipeline
+### lexFrequencyPipeline
 
 Create a custom pipeline for calculating lexical statistics.
 
@@ -105,13 +105,17 @@ The pipeline is
 Example:
 
 ```javascript
-import { lexPipeline } from "lex-helpers";
+import { lexFrequencyPipeline } from "lex-helpers";
 const lexicon = { the: 0.2, cat: 0.1, sat: 0.1, on: 0.1, mat: 0.1 };
 const intercept = 10.523;
-const pipeline = lexPipeline(lexicon, intercept);
+const pipeline = lexFrequencyPipeline(lexicon, intercept);
 const tokens = ["the", "cat", "sat", "on", "the", "mat"];
 const result = pipeline(tokens); // 12.523
 ```
+
+### lexBinPipeline
+
+The same as `lexFrequencyPipeline` but getFrequencies simply counts a token as present (1) or absent (0), instead of the token's frequency.
 
 ### sumValues
 
