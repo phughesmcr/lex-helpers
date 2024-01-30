@@ -1,20 +1,28 @@
 {
   "name": "lex-helpers",
-  "version": "0.4.0",
-  "description": "Shared functions for modules such as predictAge and wellbeing_analysis.",
+  "description": "Functions for calculating Open Vocabulary lexical statistics.",
+  "version": "0.5.0",
   "main": "index.js",
+  "module": "index.js",
+  "type": "module",
+  "sideEffects": false,
+  "keywords": [
+    "lexicon",
+    "lexical",
+    "vocabulary",
+    "statistics",
+    "open vocabulary",
+    "wwbp",
+    "sentiment"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/phugh/lex-helpers.git"
+    "url": "git+https://github.com/phughesmcr/lex-helpers.git"
   },
-  "author": "P. Hughes <peter@phugh.es> (http://www.phugh.es)",
+  "author": "P. Hughes <github@phugh.es> (http://www.phugh.es)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/phugh/lex-helpers/issues"
+    "url": "https://github.com/phughesmcr/lex-helpers/issues"
   },
-  "homepage": "https://github.com/phugh/lex-helpers#readme",
-  "dependencies": {
-    "async": "^2.6.1",
-    "decimal.js-light": "^2.4.1"
-  }
+  "homepage": "https://github.com/phughesmcr/lex-helpers#readme"
 }
